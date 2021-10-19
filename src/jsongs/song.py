@@ -14,7 +14,7 @@ class SongBase:
 class Song(object):
     VERSION="v1.0"
     LAST_ID=0
-    SKIP_ITER=["paths", "filename", "file_format", "extension", "id3"]
+    SKIP_ITER=["path", "filename", "file_format", "extension", "id3"]
     DEFAULT_COVER_URL=""
 
     def __init__(self, path=None, file_format=None):
@@ -53,10 +53,3 @@ class Song(object):
         c=0
         return [Song(path=ospath.join(ospath.abspath(path),s)) for s in listdir(ospath.abspath(path))]
 
-
-#if __name__ == "__main__":
-#    s=Song("Mazda")
-#    print(dict(s))
-
-
-#ime, autor, cover, url

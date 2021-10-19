@@ -52,4 +52,4 @@ MANIFEST
 .venv*/
 .conda*/
 
-src/files
+src/files/
