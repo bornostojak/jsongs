@@ -14,7 +14,7 @@ class SongBase:
 class Song(object):
     VERSION="v1.0"
     LAST_ID=0
-    SKIP_ITER=["path", "filename", "file_format", "extension", "id3"]
+    SKIP_ITER=["id", "path", "filename", "file_format", "extension", "id3"]
     DEFAULT_COVER_URL=""
 
     def __init__(self, path=None, file_format=None):
@@ -47,6 +47,9 @@ class Song(object):
         for i,k in self.__dict__.items():
             if not i in Song.SKIP_ITER:
                 yield i,k
+    
+    def __repr__(self):
+        return repr(dict(self))
     
     @staticmethod
     def get_songs_from_drectory(path):

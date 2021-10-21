@@ -1,3 +1,5 @@
+"""Jsonify songs contained in a folder and make them available via an API,"""
+
 import sys
 
 if sys.version_info[:2] >= (3, 8):
@@ -8,8 +10,8 @@ else:
 
 try:
     # Change here if project is renamed and does not equal the package name
-    dist_name = "JSONgs"
-    __version__ = version(dist_name)
+    dist_name = "jsongs"
+    __version__ = "0.1.1"
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 finally:
