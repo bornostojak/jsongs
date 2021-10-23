@@ -16,18 +16,18 @@ AUDIO_EXTENSIONS=[".mp3", ".wav", ".mp2"]
 CONFIG = None
 
 def grab_songs():
-    all_files=set(os.listdir(CONFIG['filedir']))
+    all_files=set(os.listdir(CONFIG['musicdir']))
 
     old_songs = list(filter(lambda x: x.filename in all_files, AllSongsResource.all))
-    new_songs = [Song(os.path.abspath(os.path.join(CONFIG["filedir"],s))) for s in all_files-set([o.filename for o in old_songs])]
+    new_songs = [Song(os.path.abspath(os.path.join(CONFIG["musicdir"],s))) for s in all_files-set([o.filename for o in old_songs])]
     AllSongsResource.all = [*old_songs, *new_songs] 
     return list(sorted(AllSongsResource.all, key= lambda k: k.filename.lower()))
 
 #def grab_songs():
 #    Song.LAST_ID = 0
-#    #all_files=[os.patj.abspath(os.path.join(CONFIG['filedir'],p)) for p in  os.listdir(CONFIG['filedir'])]
-#    all_files=os.listdir(CONFIG['filedir'])
-#    audio_files=set([os.path.join(CONFIG['filedir'],f) for f in list(filter(lambda b: os.path.splitext(b)[-1].lower() in AUDIO_EXTENSIONS, all_files))])
+#    #all_files=[os.patj.abspath(os.path.join(CONFIG['musicdir'],p)) for p in  os.listdir(CONFIG['musicdir'])]
+#    all_files=os.listdir(CONFIG['musicdir'])
+#    audio_files=set([os.path.join(CONFIG['musicdir'],f) for f in list(filter(lambda b: os.path.splitext(b)[-1].lower() in AUDIO_EXTENSIONS, all_files))])
 #    not_present = audio_files - set(AllSongsResource.get_all("path"))
 #
 #    return list(sorted([*list(filter(lambda b: b.path in audio_files, AllSongsResource.get_all())), *[Song(g) for g in not_present]],key= lambda x: x.filename.lower()))
@@ -38,8 +38,8 @@ def prep_songs_for_json(songs: Song):
 
 class SongResource(Resource):
     def get(self, song):
-        songpath = os.path.join(CONFIG['filedir'], song)
-        if os.path.exists(songpath) and os.path.dirname(songpath) == CONFIG["filedir"]:
+        songpath = os.path.join(CONFIG['musicdir'], song)
+        if os.path.exists(songpath) and os.path.dirname(songpath) == CONFIG["musicdir"]:
             return send_file(songpath)
         abort(400)
 
@@ -57,9 +57,9 @@ class AllSongsResource(Resource):
 
 class CoverResource(Resource):
     def get(self, song):
-        songpath = os.path.join(CONFIG["filedir"], song)
-        if os.path.dirname(songpath) == CONFIG["filedir"] and os.path.exists(songpath):
-            s = Song(os.path.join(CONFIG['filedir'], song))
+        songpath = os.path.join(CONFIG["musicdir"], song)
+        if os.path.dirname(songpath) == CONFIG["musicdir"] and os.path.exists(songpath):
+            s = Song(os.path.join(CONFIG['musicdir'], song))
             response = make_response(s.id3["APIC:"].data)
             response.headers.set('Content-Type', 'image/jpeg')
             #response.headers.set(
@@ -78,11 +78,11 @@ def config(configfile=None):
     if not configfile or not os.path.exists(os.path.realpath(configfile)): 
         configfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
     if not os.path.exists(configfile):
-        print("Please create a config file")
+        print("Please specify a config file with -c/--config or use --create-config [PATH] to generate a template")
         exit(1)
     with open(configfile, "r") as config:
         CONFIG=json.loads(config.read())
-        CONFIG["filedir"]=os.path.realpath(CONFIG["filedir"])
+        CONFIG["musicdir"]=os.path.realpath(CONFIG["musicdir"])
 
 @app.route("/")
 def rediirect():

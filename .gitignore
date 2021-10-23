@@ -53,3 +53,4 @@ MANIFEST
 .conda*/
 
 src/files/
+tests/files/
