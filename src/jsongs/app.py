@@ -19,7 +19,7 @@ def grab_songs():
     all_files=set(os.listdir(CONFIG['musicdir']))
 
     old_songs = list(filter(lambda x: x.filename in all_files, AllSongsResource.all))
-    new_songs = [Song(os.path.abspath(os.path.join(CONFIG["musicdir"],s))) for s in all_files-set([o.filename for o in old_songs])]
+    new_songs = [Song(os.path.abspath(os.path.join(CONFIG["musicdir"],s))) for s in all_files-set([o.filename for o in old_songs]) if True in [s.lower().endswith(x) for x in [".mp3", ".mp2", ".wav"]]]
     AllSongsResource.all = [*old_songs, *new_songs] 
     return list(sorted(AllSongsResource.all, key= lambda k: k.filename.lower()))
 
