@@ -40,7 +40,7 @@ class Song(object):
                         self.cover = "/api/{}/cover/".format(Song.VERSION)+quote(self.filename)
                 except Exception:
                     pass
-        self.url = "/api/{}/songs/".format(Song.VERSION)+quote(self.filename)
+        self.url = "/api/{}/songs/".format(type(self).VERSION)+quote(self.filename)
         self.file_format = file_format
 
     def __iter__(self):
