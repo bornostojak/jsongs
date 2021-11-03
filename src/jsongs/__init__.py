@@ -35,9 +35,9 @@ def main():
             #with open(CFILE, "w") as file:
             #    file.write(json.dumps({'musicdir':'MUSIC_DIR_PATH_HERE'}))
         except IndexError:
-            print("You are missing the config file path!")
-            exit(1)
-        create_config(CFILE)
+            create_config(None, example=("--example-config" in argv))
+            exit(0)
+        create_config(CFILE, example=("--example-config" in argv))
         exit(0)
     if "-c" in argv:
         CONF=config(argv[argv.index("-c")+1])
