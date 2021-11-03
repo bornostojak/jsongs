@@ -73,16 +73,17 @@ api.add_resource(SongResource, "/songs/<string:song>")
 api.add_resource(AllSongsResource, "/songs")
 api.add_resource(CoverResource, "/cover/<string:song>")
 
-def config(configfile=None):
+def config(configfile=None) -> str:
     global CONFIG
-    if not configfile or not os.path.exists(os.path.realpath(configfile)): 
-        configfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
-    if not os.path.exists(configfile):
+    #if not configfile or not os.path.exists(os.path.realpath(configfile)): 
+        #configfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
+    if not (configfile and os.path.exists(configfile)):
         print("Please specify a config file with -c/--config or use --create-config [PATH] to generate a template")
         exit(1)
     with open(configfile, "r") as config:
         CONFIG=json.loads(config.read())
         CONFIG["musicdir"]=os.path.realpath(CONFIG["musicdir"])
+    return CONFIG
 
 @app.route("/")
 def rediirect():
