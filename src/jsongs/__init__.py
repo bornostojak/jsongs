@@ -3,6 +3,7 @@
 import sys
 from sys import argv
 import os
+from flask_talisman import Talisman
 
 from .app import *
 from .create_config import *
@@ -17,7 +18,7 @@ else:
 try:
     # Change here if project is renamed and does not equal the package name
     dist_name = "jsongs"
-    __version__ = "0.1.1"
+    __version__ = "0.1.2"
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 finally:
@@ -28,6 +29,7 @@ finally:
 
 def main():
     CONF=None
+    ssl=None
     if "--create-config" in argv:
         try:
             CFILE=argv[argv.index('--create-config')+1]
@@ -48,5 +50,18 @@ def main():
     else:
         CONF=config(None)
     if not CONF:
-        app.run(debug=False, threaded=True, port= 8080, host="0.0.0.0")
-    app.run(debug=CONF['debug'], threaded=True, port= CONF['port'], host="0.0.0.0")
+        app.run(debug=False, threaded=True, port= 8080, host="0.0.0.0", ssl_context="adhoc")
+    env_no_ssl=False
+    try:
+        env_no_ssl=int(os.environ['NO_SSL'])
+        print(env_no_ssl, CONF['nossl'])
+    except KeyError:
+        pass
+    if not CONF['nossl'] and not env_no_ssl:
+        ssl=(CONF['ssl_cert'], CONF['ssl_privkey'])
+        if False in (os.path.exists(s) for s in ssl):
+            ssl="adhoc"
+            
+        Talisman(app)
+    
+    app.run(debug=CONF['debug'], threaded=True, port= CONF['port'], host="0.0.0.0", ssl_context=ssl)
