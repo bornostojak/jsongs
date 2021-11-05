@@ -10,3 +10,9 @@ Version 0.1.1
 Version 0.1.2
 ===========
 - HTTPS in flask app
+
+Version 0.1.3
+===========
+- Created ConfigManger
+- simplified config and usage
+- Gunicorn ready

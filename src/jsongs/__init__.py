@@ -1,12 +1,11 @@
 """Jsonify songs contained in a folder and make them available via an API,"""
 
+import argparse
 import sys
-from sys import argv
 import os
 from flask_talisman import Talisman
 
 from .app import *
-from .create_config import *
 
 
 if sys.version_info[:2] >= (3, 8):
@@ -18,50 +17,8 @@ else:
 try:
     # Change here if project is renamed and does not equal the package name
     dist_name = "jsongs"
-    __version__ = "0.1.2"
+    __version__ = "0.1.3"
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 finally:
     del version, PackageNotFoundError
-
-
-
-
-def main():
-    CONF=None
-    ssl=None
-    if "--create-config" in argv:
-        try:
-            CFILE=argv[argv.index('--create-config')+1]
-            if os.path.exists(CFILE) and input("The file already exists! DO YOU WANT TO OVERWRITE IT (y/N): ").lower() != "y": exit(1)
-            #with open(CFILE, "w") as file:
-            #    file.write(json.dumps({'musicdir':'MUSIC_DIR_PATH_HERE'}))
-        except IndexError:
-            create_config(None, example=("--example-config" in argv))
-            exit(0)
-        create_config(CFILE, example=("--example-config" in argv))
-        exit(0)
-    if "-c" in argv:
-        CONF=config(argv[argv.index("-c")+1])
-    elif "--config" in argv:
-        CONF=config(argv[argv.index("--config")+1])
-    elif os.environ['JSONGS_CONFIG_FILE']:
-        CONF=config(os.environ['JSONGS_CONFIG_FILE'])
-    else:
-        CONF=config(None)
-    if not CONF:
-        app.run(debug=False, threaded=True, port= 8080, host="0.0.0.0", ssl_context="adhoc")
-    env_no_ssl=False
-    try:
-        env_no_ssl=int(os.environ['NO_SSL'])
-        print(env_no_ssl, CONF['nossl'])
-    except KeyError:
-        pass
-    if not CONF['nossl'] and not env_no_ssl:
-        ssl=(CONF['ssl_cert'], CONF['ssl_privkey'])
-        if False in (os.path.exists(s) for s in ssl):
-            ssl="adhoc"
-            
-        Talisman(app)
-    
-    app.run(debug=CONF['debug'], threaded=True, port= CONF['port'], host="0.0.0.0", ssl_context=ssl)
