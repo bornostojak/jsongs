@@ -35,6 +35,8 @@ def configure_app(config: ConfigManager = ConfigManager()) -> ConfigManager:
 
     config = ConfigManager.generate_from_config_file(config_file)
 
+    Song.URLDOMAIN = os.environ.get('URLDOMAIN')
+
     if os.environ.get("SSL_CERT") and os.environ.get("SSL_PRIVKEY"):
         config.ssl_cert = os.environ.get("SSL_CERT") or config.ssl_cert
         config.ssl_privkey = os.environ.get("SSL_PRIVKEY") or config.ssl_privkey

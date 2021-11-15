@@ -18,6 +18,9 @@ aparser.http = (
 def main(args: Namespace):
     """Main entery function"""
 
+    if args.domain and not os.environ.get('URLDOMAIN'):
+        os.environ.setdefault('URLDOMAIN', args.domain)
+
     ssl = (args.ssl_cert, args.ssl_privkey)
     ssl = ("" in ssl and not args.http and ssl) or (not args.http and "adhoc") or None
     app.run(

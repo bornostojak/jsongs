@@ -7,6 +7,7 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("-c", "--config", metavar="PATH", type=str, help="config file path")
 parser.add_argument("--musicdir", metavar="PATH", type=str, help="music directory PATH")
+parser.add_argument("--domain", metavar="PATH", type=str, help="the domain of the computer")
 parser.add_argument("--ssl-cert", metavar="PATH", type=str, help="ssl certificate path")
 parser.add_argument(
     "--ssl-privkey", metavar="PATH", type=str, help="ssl private key path"

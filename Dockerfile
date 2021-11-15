@@ -15,6 +15,7 @@ pip install gunicorn
 COPY config/run.sh /run.sh
 
 ENV JSONGS_CONFIG "/config/config.json"
+ENV URLDOMAIN "http://localhost:8080"
 ENV PORT 8080
 
 EXPOSE 8080

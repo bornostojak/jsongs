@@ -14,6 +14,7 @@ class Song:
     LAST_ID = 0
     SKIP_ITER = ["id", "path", "filename", "file_format", "extension", "id3"]
     DEFAULT_COVER_URL = ""
+    URLDOMAIN=""
 
     def __init__(self, path=None, file_format=None):
         """Initialize Song object"""
@@ -37,10 +38,10 @@ class Song:
                     author = str(self.id3.get("TPE1")).rstrip()
                     self.author = author if author != "None" else self.author
                     if self.id3.get("APIC:") and len(self.id3.get("APIC:").data) > 1024:
-                        self.cover = f"/api/{Song.VERSION}/cover/{quote(self.filename)}"
+                        self.cover = f"{URLDOMAIN}/api/{Song.VERSION}/cover/{quote(self.filename)}"
                 except ID3NoHeaderError:
                     pass
-        self.url = f"/api/{type(self).VERSION}/songs/{quote(self.filename)}"
+        self.url = f"{type(self).URLDOMAIN}/api/{type(self).VERSION}/songs/{quote(self.filename)}"
         self.file_format = file_format
 
     def __iter__(self):
