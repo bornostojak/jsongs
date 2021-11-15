@@ -1,5 +1,7 @@
 """Jsonify songs contained in a folder and make them available via an API,"""
 
+# pylint: disable=invalid-name,fixme
+
 import argparse
 import sys
 import os

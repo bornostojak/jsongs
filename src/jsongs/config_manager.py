@@ -3,7 +3,6 @@
 from json import loads, dumps
 from sys import stdout, stderr, exit as sysexit
 import os
-from typing import Tuple
 
 
 class ConfigManager:
@@ -54,9 +53,9 @@ class ConfigManager:
         """repr method"""
         return repr(self.__dict__)
 
-    def __len__(sefl):
+    def __len__(self):
         """Return length of items"""
-        return len(sefl.__dict__)
+        return len(self.__dict__)
 
     def clear(self):
         """Reset all items in the object"""
@@ -95,7 +94,7 @@ class ConfigManager:
 
         stdout.write(dumps(new_config))
         if file:
-            with open(file, "w") as cfgfile:
+            with open(file, "w", encoding="utf-8") as cfgfile:
                 cfgfile.write(dumps(new_config))
 
     @staticmethod
@@ -107,6 +106,6 @@ class ConfigManager:
     def generate_from_config_file(cls: type, path: str):
         """Generate confiuration from config file"""
         config = cls()
-        with open(path, "r") as file:
+        with open(path, "r", encoding="utf-8") as file:
             config.update(**loads(file.read()))
         return config

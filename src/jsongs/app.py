@@ -1,5 +1,7 @@
 """Flask application for song simple song delivery API"""
 
+# pylint: disable=no-self-use,inconsistent-return-statements
+
 import os
 from flask import Flask, send_file, abort, make_response, redirect
 from flask_restful import Resource, Api, reqparse
@@ -26,6 +28,7 @@ def configure_app(config: ConfigManager = ConfigManager()) -> ConfigManager:
             (
                 (os.path.exists(path), path)
                 for path in (os.environ.get("JSONGS_CONFIG"), "/etc/jsongs/config.json")
+                if path
             ),
         )
     )[0][1]

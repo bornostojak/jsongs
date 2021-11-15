@@ -2,10 +2,13 @@
 from os import listdir, path as ospath
 from urllib.parse import quote
 from mutagen.id3 import ID3
+from mutagen.id3._util import ID3NoHeaderError
 
 
 class Song:
     """Song object"""
+
+    # pylint: disable=too-many-instance-attributes,invalid-name,broad-except
 
     VERSION = "v1.0"
     LAST_ID = 0
@@ -29,15 +32,15 @@ class Song:
             if self.extension.lower() == "mp3":
                 try:
                     self.id3 = ID3(self.path)
-                    self.title = ", ".join(self.id3["TIT2"].text)
-                    self.author = ", ".join(self.id3["TPE1"].text)
-                    if "APIC:" in self.id3 and len(self.id3["APIC:"].data) > 1024:
-                        self.cover = "/api/{}/cover/".format(Song.VERSION) + quote(
-                            self.filename
-                        )
-                except Exception:
+                    title = str(self.id3.get("TIT2")).strip()
+                    self.title = title if title != "None" else self.title
+                    author = str(self.id3.get("TPE1")).rstrip()
+                    self.author = author if author != "None" else self.author
+                    if self.id3.get("APIC:") and len(self.id3.get("APIC:").data) > 1024:
+                        self.cover = f"/api/{Song.VERSION}/cover/{quote(self.filename)}"
+                except ID3NoHeaderError:
                     pass
-        self.url = "/api/{}/songs/".format(type(self).VERSION) + quote(self.filename)
+        self.url = f"/api/{type(self).VERSION}/songs/{quote(self.filename)}"
         self.file_format = file_format
 
     def __iter__(self):

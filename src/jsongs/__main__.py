@@ -6,11 +6,12 @@ from flask_restful.reqparse import Namespace
 from .arg_parser import parser as argparser
 from .app import app
 
-"""Configure the app"""
-args = argparser.parse_args()
-args.config = args.config or os.environ.get("JSONGS_CONFIG")
-args.http = (
-    int(os.environ["NO_SSL"]) and args.http if "NO_SSL" in os.environ else args.http
+aparser = argparser.parse_args()
+aparser.config = aparser.config or os.environ.get("JSONGS_CONFIG")
+aparser.http = (
+    int(os.environ["NO_SSL"]) and aparser.http
+    if "NO_SSL" in os.environ
+    else aparser.http
 )
 
 
@@ -28,4 +29,4 @@ def main(args: Namespace):
     )
 
 
-main(args)
+main(aparser)
